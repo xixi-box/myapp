@@ -1,0 +1,1 @@
+export const SYSTEM_LOGO="https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqqezIqTPmqO9uzvOTzsjsxdBhXvPuibOhYYIdFMGVw27363WuWkBegvt8XuGFNdphgwrBkr7tTBSw/132"
