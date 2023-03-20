@@ -1,16 +1,13 @@
 import {
   LockOutlined,
-  MobileOutlined,
   UserOutlined,
-  WeiboCircleOutlined,
 } from '@ant-design/icons';
-import { Alert, message, Tabs } from 'antd';
+import {Alert, Divider, message, Space, Tabs} from 'antd';
 import React, { useState } from 'react';
-import { ProFormCaptcha, ProFormCheckbox, ProFormText, LoginForm } from '@ant-design/pro-form';
-import { history, useModel } from 'umi';
+import { ProFormCheckbox, ProFormText, LoginForm } from '@ant-design/pro-form';
+import {history, Link, useModel} from 'umi';
 import Footer from '@/components/Footer';
 import { login } from '@/services/ant-design-pro/api';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import styles from './index.less';
 import {SYSTEM_LOGO} from "@/constants";
 
@@ -59,7 +56,7 @@ const Login: React.FC = () => {
         history.push(redirect || '/');
         return;
       }
-
+      console.log(user);
       // 如果失败去设置用户错误信息
       setUserLoginState(user);
     } catch (error) {
@@ -107,7 +104,7 @@ const Login: React.FC = () => {
                   },
                 ]}
               />
-              <ProFormText
+              <ProFormText.Password
                 name="userPassword"
                 fieldProps={{
                   size: 'large',
@@ -119,7 +116,7 @@ const Login: React.FC = () => {
                     required: true,
                     min:8,
                     type:'string',
-                    message: '密码是必填项！',
+                    message: '密码不小于8位',
                   },
                 ]}
               />
@@ -127,77 +124,30 @@ const Login: React.FC = () => {
           )}
 
           {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
-          {type === 'mobile' && (
-            <>
-              <ProFormText
-                fieldProps={{
-                  size: 'large',
-                  prefix: <MobileOutlined className={styles.prefixIcon} />,
-                }}
-                name="mobile"
-                placeholder={'请输入手机号！'}
-                rules={[
-                  {
-                    required: true,
-                    message: '手机号是必填项！',
-                  },
-                  {
-                    pattern: /^1\d{10}$/,
-                    message: '不合法的手机号！',
-                  },
-                ]}
-              />
-              <ProFormCaptcha
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined className={styles.prefixIcon} />,
-                }}
-                captchaProps={{
-                  size: 'large',
-                }}
-                placeholder={'请输入验证码！'}
-                captchaTextRender={(timing, count) => {
-                  if (timing) {
-                    return `${count} ${'秒后重新获取'}`;
-                  }
-                  return '获取验证码';
-                }}
-                name="captcha"
-                rules={[
-                  {
-                    required: true,
-                    message: '验证码是必填项！',
-                  },
-                ]}
-                onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
-                    phone,
-                  });
-                  if (result === false) {
-                    return;
-                  }
-                  message.success('获取验证码成功！验证码为：1234');
-                }}
-              />
-            </>
-          )}
           <div
             style={{
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
-            </ProFormCheckbox>
-            <a
-              style={{
-                float: 'right',
-              }}
-            >
-              忘记密码 ?
-            </a>
+            <Space split={<Divider type="vertical" />}>
+              <ProFormCheckbox noStyle name="autoLogin">
+                自动登录
+              </ProFormCheckbox>
+              <Link to="/user/register">新用户注册</Link>
+              <a
+                style={{
+                  float: 'right',
+                }}
+
+                target="_blank"
+                rel="noreferrer"
+              >
+                忘记密码
+              </a>
+            </Space>
           </div>
         </LoginForm>
+
       </div>
       <Footer />
     </div>
